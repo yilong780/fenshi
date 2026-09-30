@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>分时数据测算</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero"><p>分时数据测算模型</p><h1>批零差收益测算</h1><span>导入日期、时段和实际用电量，联动计算购电均价与分时收益</span></header>
+    <section class="card">
+      <div class="head"><div><h2>导入实际用电量</h2><small>支持 .xlsx / .xls；可识别“日、月、时刻2、时刻、实际用电量”等列</small></div><label class="button">选择Excel<input id="fileInput" type="file" accept=".xlsx,.xls,.csv"></label></div>
+      <p class="hint">兼容示例格式：日、月、时刻2、时刻、实际用电量。其中“时刻”为1—24时段，“时刻2”为15分钟时间；导入后汇总1—9月实际用电量，并按批零差收益逻辑预测10—12月。</p>
+      <div id="status" class="status">尚未导入数据，当前显示模板数据。</div>
+    </section>
+    <section class="card"><div class="head"><div><h2>市场价格参数</h2><small>对应Excel「批发市场分时均价」N1:N4</small></div></div><div id="controls" class="controls"></div><p class="hint">F为封顶系数；浮动、分摊、分摊费共同形成价格调节量：浮动 + 分摊 × 分摊费。</p></section>
+    <section class="results"><article><span>购电均价</span><strong id="purchase">0.00</strong><small>元/MWh</small></article><article><span>非分时总收益</span><strong id="nonProfit">0.00</strong><small>元/MWh</small></article><article><span>分时总收益</span><strong id="timeProfit">0.00</strong><small>元/MWh</small></article></section>
+    <section class="card"><h2>分月总用电量走势图</h2><small>对应批零差收益用电量行：1—9月为实际汇总，10—12月按预测公式生成</small><canvas id="volumeChart" height="220"></canvas><p class="hint" id="volumeNote"></p></section>
+    <section class="card"><h2>1-9月24时刻实际用电量全月均值图</h2><small>对应分月24时刻用电均值：同一时段全月平均，多月曲线对照</small><canvas id="slotChart" height="260"></canvas><div id="slotLegend" class="legend"></div></section>
+    <section class="card"><h2>用电稳定性分析：分月日总用电量</h2><small>根据导入的实际用电量底层数据，按自然日汇总；每个月单独显示一张图。</small><div id="dailyCharts" class="daily-charts"></div><p class="hint" id="dailyNote">导入实际用电量后显示1—9月每日总用电量走势图。</p></section>
+    <section class="card"><h2>12个月结果明细</h2><div class="table-wrap"><table><thead><tr><th>月份</th><th>用电量</th><th>占比</th><th>购电均价</th><th>非分时零售价</th><th>分时零售价</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
